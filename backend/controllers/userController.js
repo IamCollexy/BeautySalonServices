@@ -1,7 +1,7 @@
 const { response } = require('express');
 const User = require('../models/User');
 const Service = require('../models/Services');
-
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 // So we don't use too many try catch block
 const asyncHandler = require('express-async-handler');
@@ -64,9 +64,8 @@ const createNewUser = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
   const { id, username, password, roles, active } = req.body;
-  const hashPassword = await bcrypt.hash(password, 10); //salt rounds
 
-  //Confirm data
+  // Confirm data
   if (
     !id ||
     !username ||
@@ -98,13 +97,15 @@ const updateUser = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // const convertId = new mongoose.Types.ObjectId(id);
-    // const userId = await User.findById(convertId);
+    // Only update password if it is provided
+    let update = { username, roles, active };
+    if (password) {
+      update.password = await bcrypt.hash(password, 10);
+    }
 
     const user = await User.findByIdAndUpdate(
-      // { _id: convertId },
       id,
-      { username, roles, active, password: hashPassword },
+      update,
       { new: true } // Retrieve the updated document
     );
 
@@ -113,17 +114,6 @@ const updateUser = asyncHandler(async (req, res) => {
     console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
-
-  //Check for duplicates
-  // const duplicate = await User.findOne(username).lean().exec();
-  //Allow updates to the original user
-  // if (duplicate && duplicate?._id === id) {
-  //   return res.status(400).json({ message: 'Duplicate user' });
-  // }
-
-  //   //draw back with save() what is the Alternative check mongoDB middleware
-  //   // const updateUser = await user.save();
-  //   res.json({ message: `${updateUser.username} updated` });
 });
 
 //@desc Delete a user

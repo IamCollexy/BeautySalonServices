@@ -2,7 +2,7 @@ const Service = require('../models/Services');
 const User = require('../models/User');
 const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
-
+require('dotenv').config();
 // @desc Get all services
 // @route GET /services
 // @access Private
@@ -32,10 +32,15 @@ const getAllServices = asyncHandler(async (req, res) => {
 // @route POST /services
 // @access Private
 const createNewService = asyncHandler(async (req, res) => {
-  const { user, desiredService, message } = req.body;
+  const { user, desiredService, message, completed } = req.body;
 
   // Confirm data
-  if (!user || !desiredService || !message) {
+  if (
+    !user ||
+    !desiredService ||
+    !message ||
+    typeof completed !== 'boolean'
+  ) {
     return res
       .status(400)
       .json({ message: 'All fields are required' });
@@ -69,6 +74,7 @@ const createNewService = asyncHandler(async (req, res) => {
     user: foundUser._id,
     desiredService,
     message,
+    completed,
   });
 
   if (service) {
@@ -153,7 +159,7 @@ const deleteService = asyncHandler(async (req, res) => {
 
   const result = await service.deleteOne();
   console.log(result);
-  const reply = `Service attached to userId ${result.user} has been updated`;
+  const reply = `Service attached to userId ${result.user} has been deleted`;
 
   res.json(reply);
 });

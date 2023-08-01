@@ -35,6 +35,7 @@ app.use(express.json());
 app.use(cookieParser());
 // Use the root router
 app.use('/', rootRouter);
+app.use('/auth', require('./routes/authRoute'));
 app.use('/users', require('./routes/userRoutes'));
 app.use('/services', require('./routes/serviceRoutes'));
 
