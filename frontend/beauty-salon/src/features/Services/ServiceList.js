@@ -9,7 +9,11 @@ const ServiceList = () => {
     isSuccess,
     isError,
     error,
-  } = useGetServicesQuery();
+  } = useGetServicesQuery(undefined, {
+    pollingInterval: 15000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
 
   let content;
 
@@ -29,17 +33,26 @@ const ServiceList = () => {
       : null;
 
     content = (
-      <table className="table table--services">
+      <table className="table table--notes">
         <thead className="table___thead">
           <tr>
-            <th scope="col" className="table__th service__status">
-              Username
+            <th scope="col" className="table__th note__status">
+              Status
             </th>
-            <th scope="col" className="table__th service___created">
+            <th scope="col" className="table__th note__created">
               Created
             </th>
-            <th scope="col" className="table__th service___updated">
+            <th scope="col" className="table__th note__updated">
               Updated
+            </th>
+            <th scope="col" className="table__th note__title">
+              Service
+            </th>
+            <th scope="col" className="table__th note__username">
+              Description
+            </th>
+            <th scope="col" className="table__th note__edit">
+              Edit
             </th>
           </tr>
         </thead>

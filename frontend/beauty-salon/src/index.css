@@ -17,11 +17,12 @@
   --INACTIVE: lightgray;
   --LINK-COLOR: whitesmoke;
   --LINK-HOVER: rgba(245, 245, 245, 0.9);
-  --NOTE-BGCOLOR: hsla(240, 64%, 27%, 0.65);
+  --SERVICE-BGCOLOR: hsla(240, 64%, 27%, 0.65);
   --STATUS-COMPLETE: limegreen;
   --STATUS-OPEN: firebrick;
   --TABLE-BGCOLOR: #fff;
   --TABLE-COLOR: #000;
+  --INPUT-INVALID: #f00;
 }
 
 /* || UTILITY CLASSES */
@@ -146,6 +147,10 @@ a:focus-visible {
   align-items: center;
 }
 
+.dash-header__container--small {
+  max-width: 800px;
+}
+
 .dash-header__nav {
   display: flex;
   flex-flow: row nowrap;
@@ -224,23 +229,23 @@ tr {
   background-color: var(--INACTIVE);
 }
 
-/* ||  NOTE */
+/* ||  SERVICE */
 
-.note__created,
-.note__updated,
-.note__username {
+.service__created,
+.service__updated,
+.service__username {
   display: none;
 }
 
-.note__status {
+.service__status {
   font-weight: bold;
 }
 
-.note__status--open {
+.service__status--open {
   color: var(--STATUS-OPEN);
 }
 
-.note__status--completed {
+.service__status--completed {
   color: var(--STATUS-COMPLETE);
 }
 
@@ -284,8 +289,8 @@ tr {
 }
 
 .form__input--incomplete {
-  border: 1px solid red;
-  outline: 1px solid red;
+  border: 1px solid var(--INPUT-INVALID);
+  outline: 1px solid var(--INPUT-INVALID);
 }
 
 .form__checkbox {
@@ -350,13 +355,13 @@ tr {
     font-size: 1.5rem;
   }
 
-  .table--notes {
+  .table--services {
     grid-template-columns: repeat(3, 1fr) 2fr repeat(2, 1fr);
   }
 
-  .note__created,
-  .note__updated,
-  .note__username {
+  .service__created,
+  .service__updated,
+  .service__username {
     display: block;
   }
 

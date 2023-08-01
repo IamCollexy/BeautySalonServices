@@ -4,7 +4,10 @@ import {
 } from '@reduxjs/toolkit';
 import { apiSlice } from '../../app/api/apiSlice';
 
-const servicesAdapter = createEntityAdapter({});
+const servicesAdapter = createEntityAdapter({
+  sortComparer: (a, b) =>
+    a.completed === b.completed ? 0 : a.completed ? 1 : -1,
+});
 
 const initialState = servicesAdapter.getInitialState();
 
@@ -15,7 +18,7 @@ export const serviceApiSlice = apiSlice.injectEndpoints({
       validateStatus: (response, result) => {
         return response.status === 200 && !result.isError;
       },
-      keepUnusedDataFor: 5, // In production you can update it, by default it is 60s
+      // keepUnusedDataFor: 5, // In production you can update it, by default it is 60s
       transformResponse: (responseData) => {
         const loadedServices = responseData.map((service) => {
           service.id = service._id;
@@ -32,10 +35,47 @@ export const serviceApiSlice = apiSlice.injectEndpoints({
         } else return [{ type: 'Service', id: 'LIST' }];
       },
     }),
+    addNewService: builder.mutation({
+      query: (initialServiceData) => ({
+        url: '/services',
+        method: 'POST',
+        body: {
+          ...initialServiceData,
+        },
+      }),
+      invalidatesTags: [{ type: 'Service', id: 'List' }],
+    }),
+    updateService: builder.mutation({
+      query: (initialServiceData) => ({
+        url: '/services',
+        method: 'PATCH',
+        body: {
+          ...initialServiceData,
+        },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Service', id: arg.id },
+      ],
+    }),
+    deleteService: builder.mutation({
+      query: ({ id }) => ({
+        url: '/services',
+        method: 'DELETE',
+        body: { id },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Service', id: arg.id },
+      ],
+    }),
   }),
 });
 
-export const { useGetServicesQuery } = serviceApiSlice;
+export const {
+  useGetServicesQuery,
+  useAddNewServiceMutation,
+  useDeleteServiceMutation,
+  useUpdateServiceMutation,
+} = serviceApiSlice;
 
 // returns the query result object
 export const selectServiceResult =
@@ -47,7 +87,7 @@ export const selectServiceData = createSelector(
   (servicesResult) => servicesResult.data // normalized state object with ids and entities
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
+//getSelectors creates these selectors  and we rename them with aliases using destructuring
 
 export const {
   selectAll: selectAllServices,

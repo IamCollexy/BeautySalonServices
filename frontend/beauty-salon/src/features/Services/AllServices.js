@@ -33,20 +33,18 @@ const AllServices = ({ serviceId }) => {
       <tr className="table__row">
         <td className="note__status--completed">
           {service.completed ? (
-            <span className="service__status--completed">
-              Completed
-            </span>
+            <span className="note__status--completed">Completed</span>
           ) : (
-            <span className="service__status--open">Open</span>
+            <span className="note__status--open">Open</span>
           )}
         </td>
-        <td className="table__cell service__created">{created}</td>
-        <td className="table__cell service__created">{updated}</td>
-        <td className="table__cell service__created">
-          {service.title}
+        <td className="table__cell note__created">{created}</td>
+        <td className="table__cell note__created">{updated}</td>
+        <td className="table__cell note__created">
+          {service.desiredService}
         </td>
-        <td className="table__cell service__created">
-          {service.username}
+        <td className="table__cell note__created">
+          {service.message}
         </td>
         <td>
           <button
